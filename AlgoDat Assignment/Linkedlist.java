@@ -1,8 +1,8 @@
 abstract public class Linkedlist {
-    Node head = null;
-    Node tail = null;
+    private  Node head = null;
+    private Node tail = null;
 
-    void insertValue(String data){
+    public void insertValue(String data){
         Node newnode = new Node(data);
 
         if(head ==  null){
@@ -14,7 +14,7 @@ abstract public class Linkedlist {
         }
     }
 
-    void display(){
+    public void display(){
         Node current = head;
         while(current != null){
             System.out.print(current.value + " -> ");
@@ -29,6 +29,8 @@ abstract public class Linkedlist {
     public String getJenis(){
         return "Thing";
     }
+
+
 
 
 
