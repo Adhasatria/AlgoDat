@@ -1,19 +1,26 @@
 
-
 public class Main {
     public static void main(String[] args) {
-        Linkedlist linkedlist = new Linkedlist();
+        Car car = new Car();
+        Band band = new Band();
 
-        Node node1 = new Node(10);
-        Node node2 = new Node(8);
-        Node node3 = new Node(6);
+        car.insertValue("Toyota");
+        car.insertValue("Mercedes");
+        car.insertValue("Subaru");
+        car.insertValue("BMW");
 
-        linkedlist.insertNode(node1);
-        linkedlist.insertNode(node2);
-        linkedlist.insertNode(node3);
+        car.display();
 
-        linkedlist.display(node1);
+        System.out.println();
 
-        linkedlist.deletion(node1, node3);
+        band.insertValue("King Crimson");
+        band.insertValue("Rush");
+        band.insertValue("Deep Purple");
+        band.insertValue("Moody Blues");
+
+        band.display();
+
+
+        
     }
 }

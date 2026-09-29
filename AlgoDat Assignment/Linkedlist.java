@@ -1,8 +1,10 @@
-public class Linkedlist {
+abstract public class Linkedlist {
     Node head = null;
     Node tail = null;
 
-    void insertNode(Node newnode){
+    void insertValue(String data){
+        Node newnode = new Node(data);
+
         if(head ==  null){
             head = newnode;
             tail = newnode;
@@ -12,16 +14,25 @@ public class Linkedlist {
         }
     }
 
-    void display(Node current){
+    void display(){
+        Node current = head;
         while(current != null){
-            System.out.println(current.data);
+            System.out.print(current.value + " -> ");
             current=current.next;
+            if (current == null){
+                System.out.print("null");
+
+            }
         }
     }
 
-    void deletion(Node current, Node previous){
-        previous.next=current.next;
+    public String getJenis(){
+        return "Thing";
     }
+
+
+
+    
 
 
    public static void main(String[] args) {

@@ -1,15 +1,15 @@
 class Node{
-    Integer data;
+    String value;
     Node next = null;
 
     
 
-    Node(int value){
-        data = value;
+    Node(String value){
+        this.value = value;
     }
 
     void checkData(){
-        System.out.println(data);
+        System.out.println();
     }
 
     void nextNode(Node nextNode){
