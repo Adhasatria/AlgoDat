@@ -1,131 +1,100 @@
 public class InfixToPostfix {
     public static String convert(String infix) {
         if (infix == null || infix.trim().isEmpty()) {
-            throw new IllegalArgumentException("Infix expression must not be empty");
+            throw new IllegalArgumentException("Ekspresi tidak boleh kosong");
         }
 
         Stack operators = new Stack();
         StringBuilder postfix = new StringBuilder();
         boolean expectOperand = true;
-        int index = 0;
 
-        while (index < infix.length()) {
-            char current = infix.charAt(index);
+        for (int i = 0; i < infix.length();) {
+            char current = infix.charAt(i);
 
             if (Character.isWhitespace(current)) {
-                index++;
-                continue;
-            }
-
-            if (Character.isLetterOrDigit(current) || current == '_') {
+                i++;
+            } else if (isOperand(current)) {
                 if (!expectOperand) {
-                    throw new IllegalArgumentException("Missing operator in infix expression");
+                    throw new IllegalArgumentException("Operator tidak ditemukan");
                 }
 
-                int start = index++;
-                while (index < infix.length()) {
-                    char next = infix.charAt(index);
-                    if (!Character.isLetterOrDigit(next) && next != '_') {
-                        break;
-                    }
-                    index++;
+                int start = i++;
+                while (i < infix.length() && isOperand(infix.charAt(i))) {
+                    i++;
                 }
-                appendToken(postfix, infix.substring(start, index));
+                append(postfix, infix.substring(start, i));
                 expectOperand = false;
-                continue;
-            }
-
-            if (current == '(') {
+            } else if (current == '(') {
                 if (!expectOperand) {
-                    throw new IllegalArgumentException("Missing operator before '('");
+                    throw new IllegalArgumentException("Operator sebelum '(' tidak ditemukan");
                 }
-                operators.push(String.valueOf(current));
-                index++;
-                continue;
-            }
-
-            if (current == ')') {
+                append(postfix, "(");
+                operators.push("(");
+                i++;
+            } else if (current == ')') {
                 if (expectOperand) {
-                    throw new IllegalArgumentException("Unexpected ')'");
+                    throw new IllegalArgumentException("Isi atau operand sebelum ')' tidak ditemukan");
                 }
                 while (!operators.isEmpty() && !operators.peek().equals("(")) {
-                    appendToken(postfix, operators.pop());
+                    append(postfix, operators.pop());
                 }
                 if (operators.isEmpty()) {
-                    throw new IllegalArgumentException("Mismatched parentheses");
+                    throw new IllegalArgumentException("Tanda kurung tidak berpasangan");
                 }
                 operators.pop();
-                expectOperand = false;
-                index++;
-                continue;
-            }
-
-            if (isOperator(current)) {
+                append(postfix, ")");
+                i++;
+            } else if (isOperator(current)) {
                 if (expectOperand) {
-                    throw new IllegalArgumentException("Operator is missing a left operand");
+                    throw new IllegalArgumentException("Operand sebelum operator tidak ditemukan");
                 }
-
-                String operator = String.valueOf(current);
                 while (!operators.isEmpty() && isOperator(operators.peek().charAt(0))
                         && shouldPop(operators.peek().charAt(0), current)) {
-                    appendToken(postfix, operators.pop());
+                    append(postfix, operators.pop());
                 }
-                operators.push(operator);
+                operators.push(String.valueOf(current));
                 expectOperand = true;
-                index++;
-                continue;
+                i++;
+            } else {
+                throw new IllegalArgumentException("Karakter tidak dikenal: " + current);
             }
-
-            throw new IllegalArgumentException("Unsupported character: " + current);
         }
 
         if (expectOperand) {
-            throw new IllegalArgumentException("Expression ends with an operator or is incomplete");
+            throw new IllegalArgumentException("Ekspresi belum lengkap");
         }
-
         while (!operators.isEmpty()) {
             String operator = operators.pop();
             if (operator.equals("(")) {
-                throw new IllegalArgumentException("Mismatched parentheses");
+                throw new IllegalArgumentException("Tanda kurung tidak berpasangan");
             }
-            appendToken(postfix, operator);
+            append(postfix, operator);
         }
-
         return postfix.toString();
     }
 
+    private static boolean isOperand(char value) {
+        return Character.isLetterOrDigit(value) || value == '_';
+    }
+
     private static boolean isOperator(char value) {
-        return value == '+' || value == '-' || value == '*' || value == '/'
-                || value == '%' || value == '^';
+        return "+-*/%^".indexOf(value) >= 0;
     }
 
     private static int precedence(char operator) {
-        switch (operator) {
-            case '+':
-            case '-':
-                return 1;
-            case '*':
-            case '/':
-            case '%':
-                return 2;
-            case '^':
-                return 3;
-            default:
-                return 0;
-        }
+        if (operator == '+' || operator == '-') return 1;
+        if (operator == '*' || operator == '/' || operator == '%') return 2;
+        if (operator == '^') return 3;
+        return 0;
     }
 
-    private static boolean shouldPop(char stackOperator, char currentOperator) {
-        if (currentOperator == '^') {
-            return precedence(stackOperator) > precedence(currentOperator);
-        }
-        return precedence(stackOperator) >= precedence(currentOperator);
+    private static boolean shouldPop(char top, char current) {
+        return precedence(top) > precedence(current)
+                || (precedence(top) == precedence(current) && current != '^');
     }
 
-    private static void appendToken(StringBuilder output, String token) {
-        if (output.length() > 0) {
-            output.append(' ');
-        }
+    private static void append(StringBuilder output, String token) {
+        if (output.length() > 0) output.append(' ');
         output.append(token);
     }
 }
