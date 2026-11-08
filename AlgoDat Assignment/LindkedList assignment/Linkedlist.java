@@ -14,6 +14,38 @@ abstract public class Linkedlist {
         }
     }
 
+    protected String getLastValue(){
+        if(isEmpty()){
+            throw new IllegalStateException("List is empty");
+        }
+        return tail.value;
+    }
+
+    protected String removeLastValue(){
+        if(isEmpty()){
+            throw new IllegalStateException("List is empty");
+        }
+
+        String value = tail.value;
+        if(head == tail){
+            head = null;
+            tail = null;
+            return value;
+        }
+
+        Node current = head;
+        while(current.next != tail){
+            current = current.next;
+        }
+        current.next = null;
+        tail = current;
+        return value;
+    }
+
+    public boolean isEmpty(){
+        return head == null;
+    }
+
     public void display(){
         Node current = head;
         while(current != null){

@@ -6,68 +6,63 @@ public class InfixToPostfix {
 
         Stack operators = new Stack();
         StringBuilder postfix = new StringBuilder();
-        boolean expectOperand = true;
+        boolean needsOperand = true;
 
-        for (int i = 0; i < infix.length();) {
+        int i = 0;
+        while (i < infix.length()) {
             char current = infix.charAt(i);
 
             if (Character.isWhitespace(current)) {
                 i++;
-            } else if (isOperand(current)) {
-                if (!expectOperand) {
-                    throw new IllegalArgumentException("Operator tidak ditemukan");
-                }
+                continue;
+            }
 
+            if (isOperand(current)) {
+                if (!needsOperand) throw new IllegalArgumentException("Operator tidak ditemukan");
                 int start = i++;
                 while (i < infix.length() && isOperand(infix.charAt(i))) {
                     i++;
                 }
                 append(postfix, infix.substring(start, i));
-                expectOperand = false;
-            } else if (current == '(') {
-                if (!expectOperand) {
-                    throw new IllegalArgumentException("Operator sebelum '(' tidak ditemukan");
-                }
-                append(postfix, "(");
+                needsOperand = false;
+                continue;
+            }
+
+            if (current == '(') {
+                if (!needsOperand) throw new IllegalArgumentException("Operator sebelum '(' tidak ditemukan");
                 operators.push("(");
                 i++;
-            } else if (current == ')') {
-                if (expectOperand) {
-                    throw new IllegalArgumentException("Isi atau operand sebelum ')' tidak ditemukan");
-                }
-                while (!operators.isEmpty() && !operators.peek().equals("(")) {
-                    append(postfix, operators.pop());
-                }
-                if (operators.isEmpty()) {
-                    throw new IllegalArgumentException("Tanda kurung tidak berpasangan");
-                }
-                operators.pop();
-                append(postfix, ")");
-                i++;
-            } else if (isOperator(current)) {
-                if (expectOperand) {
-                    throw new IllegalArgumentException("Operand sebelum operator tidak ditemukan");
-                }
-                while (!operators.isEmpty() && isOperator(operators.peek().charAt(0))
-                        && shouldPop(operators.peek().charAt(0), current)) {
-                    append(postfix, operators.pop());
-                }
-                operators.push(String.valueOf(current));
-                expectOperand = true;
-                i++;
-            } else {
-                throw new IllegalArgumentException("Karakter tidak dikenal: " + current);
+                continue;
             }
+
+            if (current == ')') {
+                if (needsOperand) throw new IllegalArgumentException("Isi atau operand sebelum ')' tidak ditemukan");
+                while (!operators.isEmpty() && !operators.peek().equals("("))
+                    append(postfix, operators.pop());
+                if (operators.isEmpty()) throw new IllegalArgumentException("Tanda kurung tidak berpasangan");
+                operators.pop();
+                i++;
+                continue;
+            }
+
+            if (isOperator(current)) {
+                if (needsOperand) throw new IllegalArgumentException("Operand sebelum operator tidak ditemukan");
+                while (!operators.isEmpty() && isOperator(operators.peek().charAt(0))
+                        && shouldPop(operators.peek().charAt(0), current))
+                    append(postfix, operators.pop());
+                operators.push(String.valueOf(current));
+                needsOperand = true;
+                i++;
+                continue;
+            }
+
+            throw new IllegalArgumentException("Karakter tidak dikenal: " + current);
         }
 
-        if (expectOperand) {
-            throw new IllegalArgumentException("Ekspresi belum lengkap");
-        }
+        if (needsOperand) throw new IllegalArgumentException("Ekspresi belum lengkap");
         while (!operators.isEmpty()) {
             String operator = operators.pop();
-            if (operator.equals("(")) {
-                throw new IllegalArgumentException("Tanda kurung tidak berpasangan");
-            }
+            if (operator.equals("(")) throw new IllegalArgumentException("Tanda kurung tidak berpasangan");
             append(postfix, operator);
         }
         return postfix.toString();
