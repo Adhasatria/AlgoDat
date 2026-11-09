@@ -1,9 +1,13 @@
-class Car extends Linkedlist {
+package LindkedList;
+
+class Band extends Linkedlist {
     @Override 
     public String getJenis(){
-        return "Mobil";
+        return "Band";
     }
+
     public static void main(String[] args) {
         
     }
+    
 }

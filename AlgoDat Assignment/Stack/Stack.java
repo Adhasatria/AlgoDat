@@ -1,3 +1,9 @@
+
+
+package Stack;
+
+import LindkedList.Linkedlist;
+
 public class Stack extends Linkedlist {
     public void push(String value) {
         insertValue(value);

@@ -1,3 +1,7 @@
+
+
+package Stack;
+
 public class InfixToPostfix {
     public static String convert(String infix) {
         if (infix == null || infix.trim().isEmpty()) {

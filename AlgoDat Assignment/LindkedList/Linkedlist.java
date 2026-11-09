@@ -1,3 +1,7 @@
+
+
+package LindkedList;
+
 abstract public class Linkedlist {
     private  Node head = null;
     private Node tail = null;
@@ -12,6 +16,26 @@ abstract public class Linkedlist {
             tail.next= newnode;
             tail = newnode;
         }
+    }
+
+    protected String getFirstValue(){
+        if(isEmpty()){
+            throw new IllegalStateException("List is empty");
+        }
+        return head.value;
+    }
+
+    protected String removeFirstValue(){
+        if(isEmpty()){
+            throw new IllegalStateException("List is empty");
+        }
+
+        String value = head.value;
+        head = head.next;
+        if(head == null){
+            tail = null;
+        }
+        return value;
     }
 
     protected String getLastValue(){

@@ -1,3 +1,7 @@
+
+
+package LindkedList;
+
 class Node{
     String value;
     Node next = null;
