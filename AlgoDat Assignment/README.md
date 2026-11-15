@@ -18,9 +18,13 @@ AlgoDat Assignment/
 │   ├── Main.java
 │   └── Queue.java
 ├── Sorting/
-│   ├── InfixToPostfix.java
-│   ├── Main.java
-│   └── Stack.java
+│    ├──BubbleSort.java
+│    ├──InsertionSort.java
+│    ├──MergeSort.java
+│    ├──QuickSort.java
+│    ├──README.md
+│    ├──SelectionSort.java
+│    └──ShellSort.java
 ├── Stack/
 │   ├── InfixToPostfix.java
 │   ├── Main.java
