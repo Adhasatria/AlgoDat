@@ -17,6 +17,10 @@ AlgoDat Assignment/
 ├── Queue/
 │   ├── Main.java
 │   └── Queue.java
+├── Sorting/
+│   ├── InfixToPostfix.java
+│   ├── Main.java
+│   └── Stack.java
 ├── Stack/
 │   ├── InfixToPostfix.java
 │   ├── Main.java
